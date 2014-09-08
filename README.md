@@ -21,3 +21,4 @@ Fixed two more issues
 
 -------------
 Added functionality to automatically download software from S3 storage
+Added functionality for other cloud storages
