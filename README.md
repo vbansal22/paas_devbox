@@ -7,4 +7,4 @@ Testing HelloWorld. Another change
 
 There are a number of files affected in this release. All are listed below:
 
-Changes made from machine hyperion
+Changes made from machine hyperion. Made production changes on this branch, not intended for hotfix.
