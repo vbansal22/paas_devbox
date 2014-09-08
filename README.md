@@ -14,3 +14,7 @@ ____________
 
 Fixed two issues
 ____________
+
+Working on HF2 now
+
+Fixed two more issues
