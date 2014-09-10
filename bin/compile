@@ -1,0 +1,111 @@
+#!/usr/bin/env bash
+# bin/compile <build-dir> <cache-dir> <env-dir>
+
+# fail fast
+set -e
+
+logger -p user.notice -t "slugc[$$]" "language_pack_java java_compile_start"
+
+BIN_DIR=$(cd $(dirname $0); pwd) # absolute path
+
+# parse args
+BUILD_DIR=$1
+CACHE_DIR=$2
+ENV_DIR=$3
+
+LOGGER_FLAGS=""
+
+curl --silent --location http://heroku-jvm-common.s3.amazonaws.com/jvm-buildpack-common.tar.gz | tar xz
+. bin/util
+. bin/java
+
+export_env_dir $ENV_DIR
+
+KEEP_M2_CACHE="true"
+
+if [ ! -d $CACHE_DIR ]; then
+  KEEP_M2_CACHE="false"
+elif [ -f $CACHE_DIR/removeM2Cache ]; then
+  KEEP_M2_CACHE="false"
+fi
+
+if [ "true" == $KEEP_M2_CACHE ]; then
+  logger -p user.notice -t "slugc[$$]" "language_pack_java retain_m2_repo"
+fi
+
+#create the cache dir if it doesn't exist
+mkdir -p $CACHE_DIR
+
+# create default system.properties
+if [ ! -f ${BUILD_DIR}/system.properties ]; then
+  echo "java.runtime.version=1.6" > ${BUILD_DIR}/system.properties
+fi
+
+# install JDK
+javaVersion=$(detect_java_version ${BUILD_DIR})
+echo -n "-----> Installing OpenJDK ${javaVersion}..."
+install_java ${BUILD_DIR} ${javaVersion}
+jdk_overlay ${BUILD_DIR}
+echo " done"
+
+# change to cache dir to install maven
+cd $CACHE_DIR
+
+# install maven with base repository
+MAVEN_URL="http://heroku-jvm-langpack-java.s3.amazonaws.com/maven.central.tar.gz"
+
+if [ ! -d .maven ]; then
+  echo -n "-----> Installing Maven 3.0.5..."
+  curl --silent --max-time 60 --location $MAVEN_URL | tar xz
+  chmod +x .maven/bin/mvn
+  echo " done"
+fi
+
+if [ -n "$MAVEN_SETTINGS_PATH" ]; then
+  MAVEN_SETTINGS_OPT="-s $MAVEN_SETTINGS_PATH"
+elif [ -n "$MAVEN_SETTINGS_URL" ]; then
+  echo -n "-----> Installing settings.xml..."
+  mkdir -p .m2
+  curl --silent --max-time 10 --location $MAVEN_SETTINGS_URL --output .m2/settings.xml
+  echo " done"
+  MAVEN_SETTINGS_OPT="-s $CACHE_DIR/.m2/settings.xml"
+elif [ -f $BUILD_DIR/settings.xml ]; then
+  MAVEN_SETTINGS_OPT="-s $BUILD_DIR/settings.xml"
+else
+  unset MAVEN_SETTINGS_OPT
+fi
+
+# change to build dir to run maven
+cd $BUILD_DIR
+
+export MAVEN_OPTS="-Xmx1024m"
+
+# build app
+BUILDCMD="$CACHE_DIR/.maven/bin/mvn -B -Duser.home=$BUILD_DIR -Dmaven.repo.local=$CACHE_DIR/.m2/repository $MAVEN_SETTINGS_OPT -DskipTests=true clean install"
+echo "-----> executing $BUILDCMD"
+
+$BUILDCMD 2>&1 | sed -u 's/^/       /'
+
+if [ "${PIPESTATUS[*]}" != "0 0" ]; then
+  echo " !     Failed to build app with Maven"
+  exit 1
+fi
+
+# finalize cache
+if [ "false" == $KEEP_M2_CACHE ]; then
+  touch $CACHE_DIR/removeM2Cache
+fi
+
+#copy .m2 and .maven if needed
+if [ "true" == $KEEP_M2_CACHE ]; then
+  for DIR in ".m2" ".maven" ; do
+    cp -r $CACHE_DIR/$DIR $DIR
+  done
+fi
+
+PROFILE_PATH="$BUILD_DIR/.profile.d/java.sh"
+mkdir -p $(dirname $PROFILE_PATH)
+echo 'export PATH="/app/.jdk/bin:$PATH"' >> $PROFILE_PATH
+echo 'export JAVA_TOOL_OPTIONS="$JAVA_TOOL_OPTIONS -Djava.rmi.server.useCodebaseOnly=true"' >> $PROFILE_PATH
+
+logger -p user.notice -t "slugc[$$]" "language_pack_java java_compile_end $LOGGER_FLAGS"
