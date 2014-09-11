@@ -19,8 +19,8 @@ curl --silent --location http://heroku-jvm-common.s3.amazonaws.com/jvm-buildpack
 . bin/util
 . bin/java
 
-# apt-get install -y bc
-# apt-get install -y zip
+sudo apt-get install -y bc
+#sudo apt-get install -y zip
 # apt-get install -y ruby
 
 gem install mustache
