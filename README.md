@@ -1,7 +1,7 @@
 Heroku buildpack: Java Custom App 
 =========================
 
-This is a [Heroku buildpack](http://devcenter.heroku.com/articles/buildpack) for Custom Java apps. It is tightly based on the patterns exposed by Java Build pack, which is also use as a template here. The buildpack is intended to modified over time to support further customization.
+This is a [Heroku buildpack](http://devcenter.heroku.com/articles/buildpack) for Custom Java apps. It is tightly based on the patterns exposed by Java Build pack, which is also used as a template here. The buildpack is intended to modified over time to support further customization.
 It uses Maven 3.0.3 to build your application and OpenJDK 1.6.0_20 to run it.
 
 Usage
