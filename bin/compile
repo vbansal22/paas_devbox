@@ -91,9 +91,9 @@ gem install mustache
 # useradd -c "TIBCO user" -m -p tibco123 -g users -s /bin/bash tibco
 
 # install EMS
-mkdir /opt/tmp
+mkdir /opt/tmp -p
 # chown tibco:users -R /opt/tmp
-mkdir /opt/tibco
+mkdir /opt/tibco -p
 # chown tibco:users /opt/tibco
 chmod 775 /opt/tibco
 
