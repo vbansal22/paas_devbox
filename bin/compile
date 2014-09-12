@@ -97,6 +97,8 @@ mkdir /opt/tibco
 # chown tibco:users /opt/tibco
 chmod 775 /opt/tibco
 
+mkdir /opt/tmp -p
+cd /opt/tmp
 curl --silent --location https://s3.amazonaws.com/vbansal/wombat/TIB_BW_6.2.0_linux26gl23_x86_64.zip | unzip -x
 . /opt/tmp
 
