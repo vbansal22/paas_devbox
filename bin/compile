@@ -110,6 +110,8 @@ export_env_dir $ENV_DIR
 
 KEEP_M2_CACHE="true"
 
+#
+
 if [ ! -d $CACHE_DIR ]; then
   KEEP_M2_CACHE="false"
 elif [ -f $CACHE_DIR/removeM2Cache ]; then
