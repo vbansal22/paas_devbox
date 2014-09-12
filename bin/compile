@@ -91,16 +91,19 @@ gem install mustache
 # useradd -c "TIBCO user" -m -p tibco123 -g users -s /bin/bash tibco
 
 # install EMS
-mkdir /opt/tmp -p
-# chown tibco:users -R /opt/tmp
-mkdir /opt/tibco -p
-# chown tibco:users /opt/tibco
-chmod 775 /opt/tibco
 
-mkdir /opt/tmp -p
-cd /opt/tmp
+OPT_DIR="$CACHE_DIR/opt"
+OPT_TMP="$OPT_DIR/tmp"
+mkdir -p $OPT_DIR
+mkdir -p $OPT_TMP
+# chown tibco:users -R /opt/tmp
+mkdir $OPT_DIR/tibco
+# chown tibco:users /opt/tibco
+chmod 775 $OPT_DIR/tibco
+
+cd "$OPT_TMP"
 curl --silent --location https://s3.amazonaws.com/vbansal/wombat/TIB_BW_6.2.0_linux26gl23_x86_64.zip | unzip -x
-. /opt/tmp
+. "$OPT_TMP"
 
 
 export_env_dir $ENV_DIR
