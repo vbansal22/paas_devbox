@@ -54,6 +54,7 @@ for PACKAGE in $(cat $BUILD_DIR/Aptfile); do
 done
 
 apt-get $APT_OPTIONS -y -d install bc
+apt-get $APT_OPTIONS -y -d install zip
 
 mkdir -p $BUILD_DIR/.apt
 
@@ -83,11 +84,22 @@ curl --silent --location http://heroku-jvm-common.s3.amazonaws.com/jvm-buildpack
 . bin/util
 . bin/java
 
-# apt-get install -y bc
-# sudo apt-get install -y zip
-# apt-get install -y ruby
-
 gem install mustache
+
+
+# create tibco user
+# useradd -c "TIBCO user" -m -p tibco123 -g users -s /bin/bash tibco
+
+# install EMS
+mkdir /opt/tmp
+# chown tibco:users -R /opt/tmp
+mkdir /opt/tibco
+# chown tibco:users /opt/tibco
+chmod 775 /opt/tibco
+
+curl --silent --location https://s3.amazonaws.com/vbansal/wombat/TIB_BW_6.2.0_linux26gl23_x86_64.zip | unzip -x
+. /opt/tmp
+
 
 export_env_dir $ENV_DIR
 
