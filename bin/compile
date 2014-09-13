@@ -55,6 +55,8 @@ done
 
 apt-get $APT_OPTIONS -y -d install bc
 apt-get $APT_OPTIONS -y -d install zip
+apt-get $APT_OPTIONS -y -d install wget
+
 
 mkdir -p $BUILD_DIR/.apt
 
@@ -90,7 +92,25 @@ gem install mustache
 # create tibco user
 # useradd -c "TIBCO user" -m -p tibco123 -g users -s /bin/bash tibco
 
-# install EMS
+# install Amazon Tools
+
+AWS_S3_DIR="$CACHE_DIR/aws/s3"
+mkdir -p "$AWS_S3_DIR"
+cd "$AWS_S3_DIR"
+wget --quiet http://s3.amazonaws.com/doc/s3-example-code/s3-curl.zip
+unzip -qq s3-curl.zip
+mkdir -p "bin"
+rsync -a --no-o --no-g s3-curl/ bin
+chmod 755 "bin/s3curl.pl"
+	
+# install TEA
+TEA_URL="https://s3.amazonaws.com/vbansal/wombat/TIB_tea_2.0.0_linux26gl23_x86_64.zip"
+REPO_DIR="$CACHE_DIR/repo"
+cd "$REPO_DIR"
+if [ ! -n "$REPO_DIR/TIB_tea_2.0.0_linux26gl23_x86_64.zip" ]; then
+	
+	#download TEA from S3
+fi
 
 OPT_DIR="$CACHE_DIR/opt"
 OPT_TMP="$OPT_DIR/tmp"
@@ -102,8 +122,8 @@ mkdir $OPT_DIR/tibco
 chmod 775 $OPT_DIR/tibco
 
 cd "$OPT_TMP"
-curl --silent --location https://s3.amazonaws.com/vbansal/wombat/TIB_BW_6.2.0_linux26gl23_x86_64.zip | unzip -x
-. "$OPT_TMP"
+#curl --silent --location https://s3.amazonaws.com/vbansal/wombat/TIB_BW_6.2.0_linux26gl23_x86_64.zip | unzip -x
+#. "$OPT_TMP"
 
 
 export_env_dir $ENV_DIR
@@ -127,7 +147,7 @@ mkdir -p $CACHE_DIR
 
 # create default system.properties
 if [ ! -f ${BUILD_DIR}/system.properties ]; then
-  echo "java.runtime.version=1.6" > ${BUILD_DIR}/system.properties
+  echo "java.runtime.version=1.7" > ${BUILD_DIR}/system.properties
 fi
 
 # install JDK
