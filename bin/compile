@@ -97,7 +97,10 @@ gem install mustache
 AWS_S3_DIR="$CACHE_DIR/aws/s3"
 mkdir -p "$AWS_S3_DIR"
 cd "$AWS_S3_DIR"
+topic "Getting s3-curl.zip"
 wget --quiet http://s3.amazonaws.com/doc/s3-example-code/s3-curl.zip
+
+topic "Unzipping s3-curl.zip"
 unzip -qq s3-curl.zip
 mkdir -p "bin"
 rsync -a --no-o --no-g s3-curl/ bin
