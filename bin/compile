@@ -107,13 +107,13 @@ rsync -a --no-o --no-g s3-curl/ bin
 chmod 755 "bin/s3curl.pl"
 	
 # install TEA 
-TEA_URL="https://s3.amazonaws.com/vbansal/wombat/TIB_tea_2.0.0_linux26gl23_x86_64.zip"
-REPO_DIR="$CACHE_DIR/repo"
-cd "$REPO_DIR"
-if [ ! -n "$REPO_DIR/TIB_tea_2.0.0_linux26gl23_x86_64.zip" ]; then
-	
+#TEA_URL="https://s3.amazonaws.com/vbansal/wombat/TIB_tea_2.0.0_linux26gl23_x86_64.zip"
+#REPO_DIR="$CACHE_DIR/repo"
+#cd "$REPO_DIR"
+#if [ ! -n "$REPO_DIR/TIB_tea_2.0.0_linux26gl23_x86_64.zip" ]; then
+#	
 	#download TEA from S3
-fi
+#fi
 
 OPT_DIR="$CACHE_DIR/opt"
 OPT_TMP="$OPT_DIR/tmp"
