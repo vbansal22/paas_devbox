@@ -97,7 +97,7 @@ gem install mustache
 
 AWS_S3_DIR="$CACHE_DIR/aws/s3"
 if [-d $AWS_S3_DIR ]; then
-	topic "Deleting $AWS_S3_DIR directory"
+	topic "Deleting $AWS_S3_DIR directory" 
 	rm $AWS_S3_DIR
 fi
 	
