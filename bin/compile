@@ -99,12 +99,12 @@ AWS_S3_DIR="$CACHE_DIR/aws/s3"
 
 if [ -d $AWS_S3_DIR ]; then
 	topic "Deleting $AWS_S3_DIR directory" 
-	rm $AWS_S3_DIR
+	rm -rf $AWS_S3_DIR
 fi
 	
 mkdir -p "$AWS_S3_DIR"
 cd "$AWS_S3_DIR"
-topic "Getting s3-curl.zip"AWS_S3_DIR
+topic "Getting s3-curl.zip"
 wget --quiet http://s3.amazonaws.com/doc/s3-example-code/s3-curl.zip
 
 topic "Unzipping s3-curl.zip"
