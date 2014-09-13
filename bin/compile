@@ -122,7 +122,7 @@ mkdir $OPT_DIR/tibco
 chmod 775 $OPT_DIR/tibco
 
 cd "$OPT_TMP"
-#curl --silent --location https://s3.amazonaws.com/vbansal/wombat/TIB_BW_6.2.0_linux26gl23_x86_64.zip | unzip -x
+# curl --silent --location https://s3.amazonaws.com/vbansal/wombat/TIB_BW_6.2.0_linux26gl23_x86_64.zip | unzip -x
 #. "$OPT_TMP"
 
 
