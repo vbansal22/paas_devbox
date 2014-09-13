@@ -96,9 +96,14 @@ gem install mustache
 # install Amazon Tools
 
 AWS_S3_DIR="$CACHE_DIR/aws/s3"
+if [-d $AWS_S3_DIR ]; then
+	topic "Deleting $AWS_S3_DIR directory"
+	rm $AWS_S3_DIR
+fi
+	
 mkdir -p "$AWS_S3_DIR"
 cd "$AWS_S3_DIR"
-topic "Getting s3-curl.zip"
+topic "Getting s3-curl.zip"AWS_S3_DIR
 wget --quiet http://s3.amazonaws.com/doc/s3-example-code/s3-curl.zip
 
 topic "Unzipping s3-curl.zip"
@@ -114,7 +119,7 @@ mkdir -p "$REPO_DIR"
 cd "$REPO_DIR"
 if [ ! -n "$REPO_DIR/TIB_tea_2.0.0_linux26gl23_x86_64.zip" ]; then
 	topic "Downloading TEA -- ${TEA_URL##*/} from S3"
-	"$AWS_S3_DIR/bin/s3curl.pl --id ${S3_KEY} --key ${S3_ACCESS_KEY} https://s3.amazonaws.com/vbansal/wombat/TIB_tea_2.0.0_linux26gl23_x86_64.zip > ${TEA_URL##*/}"
+	"$AWS_S3_DIR/bin/s3curl.pl --id $S3_KEY --key $S3_ACCESS_KEY https://s3.amazonaws.com/vbansal/wombat/TIB_tea_2.0.0_linux26gl23_x86_64.zip > ${TEA_URL##*/}"
 	#download TEA from S3
 fi
  
