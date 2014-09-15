@@ -299,7 +299,7 @@ topic "*****"
 
 # deploy product, create installer file
 cat << EOF > "$PROD_INSTALLER_HOME/install.sh"
-"$PACKAGE_DIR/TIBCOUniversalInstaller-lnx-x86-64.bin" -is:javahome /app/.jdk -silent -V responseFile="$PROD_INSTALLER_HOME/tea.silent"
+"$PACKAGE_DIR/TIBCOUniversalInstaller-lnx-x86-64.bin -silent -V responseFile=$PROD_INSTALLER_HOME/tea.silent -is:javahome /app/.jdk"
 EOF
 chmod 755 $PROD_INSTALLER_HOME/install.sh
 
