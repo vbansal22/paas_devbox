@@ -284,7 +284,7 @@ fi
 
 # TODO: product version
 
-JAVA_HOME="$BUILD_DIR/.jdk"
+#JAVA_HOME="$BUILD_DIR/.jdk"
 topic "JAVA HOME is $JAVA_HOME hello"
 if [ -d "$BUILD_DIR/.jdk" ]; then
 	topic "$BUILD_DIR/.jdk exists"
