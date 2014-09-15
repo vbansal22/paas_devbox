@@ -261,7 +261,7 @@ unzip -o "$INSTALLER_FILE" -d "$PACKAGE_DIR"
 cd "$CACHE_DIR"
 cp "$BUILD_DIR/silentInstall.template" "$PACKAGE_DIR"
 
-if [ -e "$PACKAGE_DIR/silentInstall.template"]; then
+if [ -e "$PACKAGE_DIR/silentInstall.template" ]; then
 	topic "$PACKAGE_DIR/silentInstall.template file exists"
 fi
 
@@ -286,11 +286,16 @@ fi
 
 JAVA_HOME="$BUILD_DIR/.jdk"
 topic "JAVA HOME is $JAVA_HOME hello"
-if [ -d "$BUILD_DIR/.jdk"]; then
+if [ -d "$BUILD_DIR/.jdk" ]; then
 	topic "$BUILD_DIR/.jdk exists"
 fi
 
 sed -e "s|%TIBCO_HOME%|$TIBCO_HOME|g" -e "s|%JAVA_HOME%|$JAVA_HOME|g" -e "s|%TIBCO_CONFIG_HOME%|$TIBCO_CONFIG_HOME|g" <"$PACKAGE_DIR/silentInstall.template" >"$PROD_INSTALLER_HOME/tea.silent"
+
+topic "Silent file contents"
+cat "$PROD_INSTALLER_HOME/tea.silent"
+topic "*****"
+
 
 # deploy product, create installer file
 cat << EOF > "$PROD_INSTALLER_HOME/install.sh"
