@@ -246,7 +246,7 @@ if [ ! -d $PACKAGE_DIR ]; then
 	mkdir -p "$PACKAGE_DIR"
 fi
 
-# upload the product into the repo directory
+# upload the product into the cache directory
 cd "$REPO_DIR"
 topic "Current directoy $PWD"
 INSTALLER_FILE="${TEA_URL##*/}"
@@ -255,16 +255,20 @@ if [ ! -e "$INSTALLER_FILE" ]; then
 	topic "Downloading TEA -- $INSTALLER_FILE from S3"
 	curl --silent $TEA_URL > "$INSTALLER_FILE"
 	# $AWS_S3_DIR/bin/s3curl.pl --id $S3_KEY --key $S3_ACCESS_KEY $TEA_URL > "$INSTALLER_FILE"
- 
 fi
 
 unzip -o "$INSTALLER_FILE" -d "$PACKAGE_DIR"
 cd "$CACHE_DIR"
 cp "$BUILD_DIR/silentInstall.template" "$PACKAGE_DIR"
 
+if [ -e "$PACKAGE_DIR/silentInstall.template"]; then
+	topic "$PACKAGE_DIR/silentInstall.template file exists"
+fi
+
 # uploaded
 
 # deploy the product into tibco.home and create install and uninstall files
+topic "Creating tibco home"
 TIBCO_HOME="$CACHE_DIR/tibco.home"
 if [ ! -d $TIBCO_HOME ]; then
 	topic "$TIBCO_HOME does not exist, creating..."
@@ -283,7 +287,7 @@ fi
 JAVA_HOME="$BUILD_DIR/.jdk"
 topic "JAVA HOME is $JAVA_HOME"
 
-sed -e "s|%TIBCO_HOME%|$TIBCO_HOME|g" -e "s|%JAVA_HOME%|$JAVA_HOME|g" -e "s|%TIBCO_CONFIG_HOME%|$TIBCO_CONFIG_HOME|g" <"$BUILD_DIR/silentInstall.template" >"$PROD_INSTALLER_HOME/tea.silent"
+sed -e "s|%TIBCO_HOME%|$TIBCO_HOME|g" -e "s|%JAVA_HOME%|$JAVA_HOME|g" -e "s|%TIBCO_CONFIG_HOME%|$TIBCO_CONFIG_HOME|g" <"$PACKAGE_DIR/silentInstall.template" >"$PROD_INSTALLER_HOME/tea.silent"
 
 cat << EOF > "$PROD_INSTALLER_HOME/install.sh"
 "$PACKAGE_DIR/TIBCOUniversalInstaller-lnx-x86-64.bin" -silent -V responseFile="$PROD_INSTALLER_HOME/tea.silent"
