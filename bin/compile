@@ -309,11 +309,23 @@ cat "$PROD_INSTALLER_HOME/install.sh"
 topic "Installing TEA"
 exec $PROD_INSTALLER_HOME/install.sh
 
+topic "The port is $PORT"
+
+topic "TEA configuration template"
+cat $BUILD_DIR/tea.conf.template
+
+
 sed -e "s|%PORT%|$PORT|g" <"$BUILD_DIR/tea.conf.template" >"$TIBCO_CONFIG_HOME/cfgmgmt/tea/conf/tea.conf"
+
+topic "tea configuration file after application of changes"
+cat "$TIBCO_CONFIG_HOME/cfgmgmt/tea/conf/tea.conf"
 
 topic "generating Procfile $BUILD_DIR/Procfile"
 cat << EOF > "$BUILD_DIR/Procfile"
 web: $TIBCO_HOME/tea/2.0/bin/tea --propFile  $TIBCO_HOME/tea/2.0/bin/tea.tra
 EOF
+
+topic "ProcFile contents"
+cat "$BUILD_DIR/Procfile"
 
 
