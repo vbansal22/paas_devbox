@@ -93,15 +93,7 @@ gem install mustache
 # create tibco user
 # useradd -c "TIBCO user" -m -p tibco123 -g users -s /bin/bash tibco
 
-# install Amazon Tools
 
-AWS_S3_DIR="$CACHE_DIR/aws/s3"
-
-if [ -d $AWS_S3_DIR ]; then
-	topic "Deleting $AWS_S3_DIR directory" 
-	rm -rf $AWS_S3_DIR
-fi
-	
 mkdir -p "$AWS_S3_DIR"
 cd "$AWS_S3_DIR"
 topic "Getting s3-curl.zip"
@@ -112,31 +104,74 @@ unzip -qq s3-curl.zip
 mkdir -p "bin"
 rsync -a --no-o --no-g s3-curl/ bin
 chmod 755 "bin/s3curl.pl"
-	
+
+
 # install TEA 
 TEA_URL="https://s3.amazonaws.com/vbansal/wombat/TIB_tea_2.0.0_linux26gl23_x86_64.zip"
 REPO_DIR="$CACHE_DIR/repo"
-mkdir -p "$REPO_DIR"
-cd "$REPO_DIR"
-if [ ! -n "$REPO_DIR/TIB_tea_2.0.0_linux26gl23_x86_64.zip" ]; then
-	topic "Downloading TEA -- ${TEA_URL##*/} from S3"
-	"$AWS_S3_DIR/bin/s3curl.pl --id $S3_KEY --key $S3_ACCESS_KEY https://s3.amazonaws.com/vbansal/wombat/TIB_tea_2.0.0_linux26gl23_x86_64.zip > ${TEA_URL##*/}"
-	#download TEA from S3
+
+topic "Current directoy $PWD"
+topic "Repo directory $REPO_DIR"
+cd $CACHE_DIR
+if [ ! -d $REPO_DIR ]; then
+	topic "$REPO_DIR does not exist, creating..."
+	mkdir -p "$REPO_DIR"
 fi
- 
-OPT_DIR="$CACHE_DIR/opt"
-OPT_TMP="$OPT_DIR/tmp"
-mkdir -p $OPT_DIR
-mkdir -p $OPT_TMP
-# chown tibco:users -R /opt/tmp
-mkdir $OPT_DIR/tibco
-# chown tibco:users /opt/tibco
-chmod 775 $OPT_DIR/tibco
 
-cd "$OPT_TMP"
-# curl --silent --location https://s3.amazonaws.com/vbansal/wombat/TIB_BW_6.2.0_linux26gl23_x86_64.zip | unzip -x
-#. "$OPT_TMP"
+PACKAGE_DIR="$CACHE_DIR/package/tea"
+if [ ! -d $PACKAGE_DIR ]; then
+	topic "$PACKAGE_DIR does not exist, creating..."
+	mkdir -p "$PACKAGE_DIR"
+fi
 
+# upload the product into the repo directory
+cd "$REPO_DIR"
+topic "Current directoy $PWD"
+INSTALLER_FILE="${TEA_URL##*/}"
+topic "Installer file $INSTALLER_FILE"
+if [ ! -e "$INSTALLER_FILE" ]; then
+	topic "Downloading TEA -- $INSTALLER_FILE from S3"
+	$AWS_S3_DIR/bin/s3curl.pl --id $S3_KEY --key $S3_ACCESS_KEY $TEA_URL > "$INSTALLER_FILE"
+fi
+
+unzip -o "$INSTALLER_FILE" -d "$PACKAGE_DIR"
+cd "$CACHE_DIR"
+cp "$BUILD_DIR/silentInstall.template" "$PACKAGE_DIR"
+
+# uploaded
+
+# deploy the product into tibco.home and create install and uninstall files
+TIBCO_HOME="$CACHE_DIR/tibco.home"
+if [ ! -d $TIBCO_HOME ]; then
+	topic "$TIBCO_HOME does not exist, creating..."
+	mkdir -p "$TIBCO_HOME"
+fi
+
+TIBCO_CONFIG_HOME="$TIBCO_HOME/config.home"
+PROD_INSTALLER_HOME="$TIBCO_CONFIG_HOME/tibco/cfgmgmt/install/tea"
+if [ ! -d $PROD_INSTALLER_HOME ]; then
+	topic "$PROD_INSTALLER_HOME does not exist, creating..."
+	mkdir -p "$PROD_INSTALLER_HOME"
+fi
+
+# TODO: product version
+
+JAVA_HOME=/app/.jdk
+
+sed -e "s|%TIBCO_HOME%|$TIBCO_HOME|g" -e "s|%JAVA_HOME%|$JAVA_HOME|g" -e "s|%TIBCO_CONFIG_HOME%|$TIBCO_CONFIG_HOME|g" <"$BUILD_DIR/silentInstall.template" >"$PROD_INSTALLER_HOME/tea.silent"
+
+cat << EOF > "$PROD_INSTALLER_HOME/install.sh"
+"$PACKAGE_DIR/TIBCOUniversalInstaller-lnx-x86-64.bin" -silent -V responseFile="$PROD_INSTALLER_HOME/tea.silent"
+EOF
+chmod 755 $PROD_INSTALLER_HOME/install.sh
+topic "Installing TEA"
+exec $PROD_INSTALLER_HOME/install.sh
+
+sed -e "s|%PORT%|$PORT|g" <"$BUILD_DIR/tea.conf.template" >"$TIBCO_CONFIG_HOME/cfgmgmt/tea/conf/tea.conf"
+
+cat << EOF > "$BUILD_DIR/Procfile"
+web: $TIBCO_HOME/tea/2.0/bin/tea --propFile  $TIBCO_HOME/tea/2.0/bin/tea.tra
+EOF
 
 export_env_dir $ENV_DIR
 
