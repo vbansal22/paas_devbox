@@ -93,6 +93,7 @@ gem install mustache
 # create tibco user
 # useradd -c "TIBCO user" -m -p tibco123 -g users -s /bin/bash tibco
 
+AWS_S3_DIR="$CACHE_DIR/aws/s3"
 
 mkdir -p "$AWS_S3_DIR"
 cd "$AWS_S3_DIR"
