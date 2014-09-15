@@ -37,6 +37,16 @@ function indent() {
 APT_CACHE_DIR="$CACHE_DIR/apt/cache"
 APT_STATE_DIR="$CACHE_DIR/apt/state"
 
+if [ -d $APT_CACHE_DIR ]; then
+	topic "Cleaning up $APT_CACHE_DIR..."
+	rm -rf $APT_CACHE_DIR
+fi
+if [ -d $APT_STATE_DIR ]; then
+	topic "Cleaning up $APT_STATE_DIR..."
+	rm -rf $APT_STATE_DIR
+fi
+
+
 topic "Build directory $BUILD_DIR"
 topic "Cache directory $CACHE_DIR"
 topic "Stack is $STACK"
