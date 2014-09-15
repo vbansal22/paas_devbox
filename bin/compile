@@ -186,7 +186,7 @@ fi
 
 # TODO: product version
 
-JAVA_HOME=/app/.jdk
+JAVA_HOME="$BUILD_DIR/app/.jdk"
 
 sed -e "s|%TIBCO_HOME%|$TIBCO_HOME|g" -e "s|%JAVA_HOME%|$JAVA_HOME|g" -e "s|%TIBCO_CONFIG_HOME%|$TIBCO_CONFIG_HOME|g" <"$BUILD_DIR/silentInstall.template" >"$PROD_INSTALLER_HOME/tea.silent"
 
