@@ -62,6 +62,7 @@ apt-get $APT_OPTIONS -y -d install libdigest-hmac-perl
 apt-get $APT_OPTIONS -y -d install libdigest-sha-perl
 
 cpan install Digest::SHA1
+cpan install Digest::HMAC_SHA1
 
 mkdir -p $BUILD_DIR/.apt
 
