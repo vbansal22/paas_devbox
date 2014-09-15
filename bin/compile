@@ -186,7 +186,8 @@ fi
 
 # TODO: product version
 
-JAVA_HOME="$BUILD_DIR/app/.jdk"
+JAVA_HOME="$BUILD_DIR/.jdk"
+topic "JAVA HOME is $JAVA_HOME"
 
 sed -e "s|%TIBCO_HOME%|$TIBCO_HOME|g" -e "s|%JAVA_HOME%|$JAVA_HOME|g" -e "s|%TIBCO_CONFIG_HOME%|$TIBCO_CONFIG_HOME|g" <"$BUILD_DIR/silentInstall.template" >"$PROD_INSTALLER_HOME/tea.silent"
 
@@ -199,6 +200,7 @@ exec $PROD_INSTALLER_HOME/install.sh
 
 sed -e "s|%PORT%|$PORT|g" <"$BUILD_DIR/tea.conf.template" >"$TIBCO_CONFIG_HOME/cfgmgmt/tea/conf/tea.conf"
 
+topic "generating Procfile $BUILD_DIR/Procfile"
 cat << EOF > "$BUILD_DIR/Procfile"
 web: $TIBCO_HOME/tea/2.0/bin/tea --propFile  $TIBCO_HOME/tea/2.0/bin/tea.tra
 EOF
