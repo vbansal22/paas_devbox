@@ -59,7 +59,7 @@ apt-get $APT_OPTIONS -y -d install zip
 apt-get $APT_OPTIONS -y -d install wget
 apt-get $APT_OPTIONS -y -d install perl
 apt-get $APT_OPTIONS -y -d install libdigest-hmac-perl
-apt-get $APT_OPTIONS -y -d install libdigest-sha1-perl
+apt-get $APT_OPTIONS -y -d install libdigest-sha-perl
 
 mkdir -p $BUILD_DIR/.apt
 
