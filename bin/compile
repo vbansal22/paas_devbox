@@ -67,7 +67,14 @@ apt-get $APT_OPTIONS -y -d install wget
 
 #############
 
+if [ -d $BUILD_DIR/.apt ]; then
+	topic "Cleaning up $BUILD_DIR/.apt..."
+	rm -rf $BUILD_DIR/.apt
+fi
+
 mkdir -p $BUILD_DIR/.apt
+
+
 
 for DEB in $(ls -1 $APT_CACHE_DIR/archives/*.deb); do
   topic "Installing $(basename $DEB)"
