@@ -134,7 +134,8 @@ chmod 755 "bin/s3curl.pl"
 
 
 # install TEA 
-TEA_URL="https://s3.amazonaws.com/vbansal/wombat/TIB_tea_2.0.0_linux26gl23_x86_64.zip"
+# TEA_URL="https://s3.amazonaws.com/vbansal/wombat/TIB_tea_2.0.0_linux26gl23_x86_64.zip"
+TEA_URL="https://s3.amazonaws.com/vbansal/wombat/chai2.zip"
 REPO_DIR="$CACHE_DIR/repo"
 
 topic "Current directoy $PWD"
@@ -158,7 +159,9 @@ INSTALLER_FILE="${TEA_URL##*/}"
 topic "Installer file $INSTALLER_FILE"
 if [ ! -e "$INSTALLER_FILE" ]; then
 	topic "Downloading TEA -- $INSTALLER_FILE from S3"
-	$AWS_S3_DIR/bin/s3curl.pl --id $S3_KEY --key $S3_ACCESS_KEY $TEA_URL > "$INSTALLER_FILE"
+	wget --quiet $TEA_URL
+	# $AWS_S3_DIR/bin/s3curl.pl --id $S3_KEY --key $S3_ACCESS_KEY $TEA_URL > "$INSTALLER_FILE"
+ 
 fi
 
 unzip -o "$INSTALLER_FILE" -d "$PACKAGE_DIR"
