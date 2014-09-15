@@ -297,17 +297,32 @@ cat "$PROD_INSTALLER_HOME/tea.silent"
 topic "*****"
 
 
+
+topic "Installing product ..."
+
+INSTALLCMD="$PACKAGE_DIR/TIBCOUniversalInstaller-lnx-x86-64.bin -silent -V responseFile=$PROD_INSTALLER_HOME/tea.silent -is:javahome $JAVA_HOME"
+echo "-----> executing $INSTALLCMD"
+
+$INSTALLCMD 2>&1 | sed -u 's/^/       /'
+
+if [ "${PIPESTATUS[*]}" != "0 0" ]; then
+  echo " !     Failed to install app with TIBCO Universal Installer"
+  exit 1
+fi
+
+
 # deploy product, create installer file
-cat << EOF > "$PROD_INSTALLER_HOME/install.sh"
-$PACKAGE_DIR/TIBCOUniversalInstaller-lnx-x86-64.bin -silent -V responseFile=$PROD_INSTALLER_HOME/tea.silent -is:javahome $JAVA_HOME
-EOF
-chmod 755 $PROD_INSTALLER_HOME/install.sh
 
-topic "Installer file contents"
-cat "$PROD_INSTALLER_HOME/install.sh"
-
-topic "Installing TEA"
-exec $PROD_INSTALLER_HOME/install.sh
+#cat << EOF > "$PROD_INSTALLER_HOME/install.sh"
+#$PACKAGE_DIR/TIBCOUniversalInstaller-lnx-x86-64.bin -silent -V responseFile=$PROD_INSTALLER_HOME/tea.silent -is:javahome $JAVA_HOME
+#EOF
+#chmod 755 $PROD_INSTALLER_HOME/install.sh
+#
+#topic "Installer file contents"
+#cat "$PROD_INSTALLER_HOME/install.sh"
+#
+#topic "Installing TEA"
+#exec $PROD_INSTALLER_HOME/install.sh
 
 topic "The port is $PORT"
 
