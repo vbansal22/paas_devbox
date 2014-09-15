@@ -285,14 +285,22 @@ fi
 # TODO: product version
 
 JAVA_HOME="$BUILD_DIR/.jdk"
-topic "JAVA HOME is $JAVA_HOME"
+topic "JAVA HOME is $JAVA_HOME hello"
+if [ -d "$BUILD_DIR/.jdk"]; then
+	topic "$BUILD_DIR/.jdk exists"
+fi
 
 sed -e "s|%TIBCO_HOME%|$TIBCO_HOME|g" -e "s|%JAVA_HOME%|$JAVA_HOME|g" -e "s|%TIBCO_CONFIG_HOME%|$TIBCO_CONFIG_HOME|g" <"$PACKAGE_DIR/silentInstall.template" >"$PROD_INSTALLER_HOME/tea.silent"
 
+# deploy product, create installer file
 cat << EOF > "$PROD_INSTALLER_HOME/install.sh"
 "$PACKAGE_DIR/TIBCOUniversalInstaller-lnx-x86-64.bin" -silent -V responseFile="$PROD_INSTALLER_HOME/tea.silent"
 EOF
 chmod 755 $PROD_INSTALLER_HOME/install.sh
+
+topic "Installer file contents"
+cat "$PROD_INSTALLER_HOME/install.sh"
+
 topic "Installing TEA"
 exec $PROD_INSTALLER_HOME/install.sh
 
