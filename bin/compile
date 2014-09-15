@@ -58,8 +58,8 @@ apt-get $APT_OPTIONS -y -d install bc
 apt-get $APT_OPTIONS -y -d install zip
 apt-get $APT_OPTIONS -y -d install wget
 # apt-get $APT_OPTIONS -y -d install perl
-apt-get $APT_OPTIONS -y -d install libdigest-hmac-perl
-apt-get $APT_OPTIONS -y -d install libdigest-sha-perl
+# apt-get $APT_OPTIONS -y -d install libdigest-hmac-perl
+# apt-get $APT_OPTIONS -y -d install libdigest-sha-perl
 
 # perl -MCPAN -e "install Digest::HMAC_SHA1"
 # cpan install Digest::SHA1
