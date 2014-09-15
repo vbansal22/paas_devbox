@@ -67,6 +67,7 @@ done
 apt-get $APT_OPTIONS -y -d install bc
 apt-get $APT_OPTIONS -y -d install zip
 apt-get $APT_OPTIONS -y -d install wget
+apt-get $APT_OPTIONS -y -d install rsync
 # apt-get $APT_OPTIONS -y -d install perl
 # apt-get $APT_OPTIONS -y -d install libdigest-hmac-perl
 # apt-get $APT_OPTIONS -y -d install libdigest-sha-perl
