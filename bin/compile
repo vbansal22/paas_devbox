@@ -320,7 +320,6 @@ if [ "${PIPESTATUS[*]}" != "0 0" ]; then
 fi
 
 chmod 755 $BUILD_DIR/start.sh
-cp $TIBCO_HOME/tea/2.0/bin/tea.tra $BUILD_DIR/app.tra
 
 TIBCO_PATH="$BUILD_DIR/.profile.d/tibco.sh"
 mkdir -p $(dirname $TIBCO_PATH)
