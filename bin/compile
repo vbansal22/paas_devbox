@@ -305,7 +305,7 @@ topic "Silent file contents"
 cat "$PROD_INSTALLER_HOME/tea.silent"
 topic "*****"
 
-
+ 
 
 topic "Installing product ..."
 
