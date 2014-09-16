@@ -309,7 +309,7 @@ topic "*****"
 
 topic "Installing product ..."
 
-INSTALLCMD="$PACKAGE_DIR/TIBCOUniversalInstaller-lnx-x86-64.bin -silent -V responseFile=$PROD_INSTALLER_HOME/tea.silent -is:javahome $JAVA_HOME"
+INSTALLCMD="$PACKAGE_DIR/TIBCOUniversalInstaller-lnx-x86-64.bin -silent -V responseFile=$PROD_INSTALLER_HOME/tea.silent -is:javahome /app/.jdk"
 echo "-----> executing $INSTALLCMD"
 
 $INSTALLCMD 2>&1 | sed -u 's/^/       /'
